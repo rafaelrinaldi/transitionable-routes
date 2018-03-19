@@ -1,0 +1,51 @@
+{
+  "name": "transitionable-routes",
+  "version": "0.0.1",
+  "description": "Perform transitions when changing routes with React Router",
+  "license": "MIT",
+  "repository": "github:rafaelrinaldi/transitionable-routes",
+  "main": "dist/transitionableRoutes.umd.js",
+  "jsnext:main": "dist/transitionableRoutes.es.js",
+  "module": "dist/transitionableRoutes.es.js",
+  "keywords": [
+    "animation",
+    "animations",
+    "motion",
+    "react",
+    "react-router",
+    "route",
+    "router",
+    "routes",
+    "transition",
+    "transitions"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "NODE_ENV=test prettier-standard index.js && jest --verbose",
+    "start": "NODE_ENV=development parcel examples/index.html -p 8000"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "jest-cli": "^22.4.2",
+    "prettier-standard": "^8.0.0",
+    "rollup": "^0.56.4",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-node-builtins": "^2.1.2"
+  },
+  "optionalDependencies": {
+    "parcel-bundler": "^1.6.2",
+    "react-dom": "^16.2.0"
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
+  }
+}

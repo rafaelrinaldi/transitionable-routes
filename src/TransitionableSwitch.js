@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { matchPath, withRouter } from 'react-router'
 import EventEmitter from 'events'
 import RouteTransitions from './RouteTransitions'
@@ -88,7 +87,6 @@ class TransitionableSwitch extends React.Component {
 
     // Wait for browser's next tick to emit the event so we can animate properly
     return window.requestAnimationFrame(() => {
-      log(`Emitting new event "${event}" to "${path}"`)
       emitter.emit(event, payload)
     })
   }
@@ -207,7 +205,7 @@ class TransitionableSwitch extends React.Component {
   }
 
   render () {
-    const nextProps = {
+    const props = {
       match: this.state.match,
       location: this.props.location,
       history: this.context.history,
@@ -231,7 +229,7 @@ class TransitionableSwitch extends React.Component {
         {
           key: route.key,
           path: route.props.path,
-          nextProps
+          props
         }
       )
 
