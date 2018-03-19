@@ -56,6 +56,76 @@ All hooks receive a callback function as an argument so you can do whatever you 
 
 ## Usage
 
+```jsx
+import React from 'react'
+import { render } from 'react-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
+import { TransitionableSwitch, TransitionableComponent } from 'transitionable-routes'
+
+const Home = () => <h1>Home</h1>
+
+class About extends TransitionableComponent {
+  constructor (props) {
+    super(props)
+    this.state = { transition: null }
+  }
+
+  willEnter (done) {
+    this.setState({ transition: 'enter' }, done)
+  }
+
+  willLeave (done) {
+    this.setState({ transition: 'leave' }, () => setTimeout(done, 500))
+  }
+
+  render () {
+    const { transition } = this.state
+    const style = {
+      opacity: transition === 'enter' ? 1 : 0,
+      transition: 'opacity 0.5s ease-out'
+    }
+    return <h1 style={style}>About</h1>
+  }
+}
+
+class Contact extends TransitionableComponent {
+  constructor (props) {
+    super(props)
+    this.state = { transition: null }
+  }
+
+  willEnter (done) {
+    this.setState({ transition: 'enter' }, done)
+  }
+
+  willLeave (done) {
+    this.setState({ transition: 'leave' }, () => setTimeout(done, 1000))
+  }
+
+  render () {
+    const { transition } = this.state
+    const style = {
+      transform: `translateY(${transition === 'enter' ? 0 : '20px'})`,
+      opacity: transition === 'enter' ? 1 : 0,
+      transition: 'all 1s ease-out'
+    }
+    return <h1 style={style}>Contact</h1>
+  }
+}
+
+const App = () => (
+  <BrowserRouter>
+    <TransitionableSwitch>
+      <Route exact path='/' render={() => <Home />} />
+      <Route path='/about' component={About} />
+      <Route path='/contact' children={<Contact />} />
+    </TransitionableSwitch>
+  </BrowserRouter>
+)
+
+render(<App />, document.querySelector('[data-app]'))
+```
+
 Checkout the [examples folder](./examples).
 
 ```sh
