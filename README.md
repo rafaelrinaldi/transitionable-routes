@@ -56,6 +56,12 @@ All hooks receive a callback function as an argument so you can do whatever you 
 
 ## Usage
 
+Checkout the [examples folder](./examples).
+
+```sh
+npm start
+```
+
 ## API
 
 ## Related
