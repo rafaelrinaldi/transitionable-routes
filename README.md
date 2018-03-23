@@ -132,7 +132,40 @@ Checkout the [examples folder](./examples).
 npm start
 ```
 
-## API
+## Project Pipeline
+
+![Help Wanted](http://messages.hellobits.com/warning.svg?message=Help%20Wanted)
+
+### Conditional rendering
+
+As of now `TransitionableSwitch` is not really able to deal with conditional route rendering. Think of routes that required the user logged in to be rendered:
+
+```js
+const App = () => (
+  <Route exect path="/" component={Home} />
+  <Route path="/login" component={Login} />
+  <Route path="/secret" render={() => {
+    isUserLoggedIn ? <SuperSecretComponent /> : <Redirect to="/login" />
+  }}>
+)
+```
+
+`TransitionableSwitch` still doesn't know how to deal with `Redirect` so even though the route will properly change in this example the login component won't be mounted.
+
+### API
+
+Even though we have `TransitionableComponent` it still feels like we could improve the API since there's quite a lot of boilerplate involved as it is right now. To create a route component that is able to perform transitions:
+
+1. Create a new React component that extends `TransitionableComponent`
+2. Override transition lifecycle methods and fire `done()`
+3. If your component needs to do anything on either `componentWillMount()` or `componentWillUnmount()` you have to remember to invoke `super()` otherwise things will break
+4. Whenever implementing a transition you must make your component stateful and manually change transition steps so you can do your thing on `render()`, this can become annoying if you have a lot of custom transitions
+
+As mentioned on #1 this could perhaps be improved with HOCs instead of using a class like `TransitionableComponent` but I'm not sure yet on what's the best thing to do there.
+
+### Examples
+
+Current examples are super simple and limited. It would be nice to have better ones that properly showcase this project's capabilities.
 
 ## Related
 
