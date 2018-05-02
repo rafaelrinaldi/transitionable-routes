@@ -87,6 +87,7 @@ class TransitionableSwitch extends React.Component {
 
     // Wait for browser's next tick to emit the event so we can animate properly
     return window.requestAnimationFrame(() => {
+      log(`Emitting new event "${event}" to "${path}"`)
       emitter.emit(event, payload)
     })
   }
@@ -149,6 +150,15 @@ class TransitionableSwitch extends React.Component {
   }
 
   _componentDidEnter () {
+    /**
+     * Scroll window to top-left when changing routes
+     */
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: 'instant'
+    })
+
     this._emit(RouteTransitions.ENTER)
   }
 
@@ -181,7 +191,7 @@ class TransitionableSwitch extends React.Component {
     const isEnteringNewRoute =
       prevState.enteringRouteKey === this.state.enteringRouteKey
     const hasLeftPreviousRoute =
-      prevState.leavingRouteKey && !this.state.leavingRouteKe
+      prevState.leavingRouteKey && !this.state.leavingRouteKey
     const shouldEmitWillEnter = isEnteringNewRoute && hasLeftPreviousRoute
     const shouldEmitWillLeave =
       this._componentLeaving && !prevState.leavingRouteKey
@@ -222,14 +232,57 @@ class TransitionableSwitch extends React.Component {
       )
     )
 
+    /**
+     * In order to support React Router's redirection, we must test this use case upfront.
+     * If any of the matching routes is `Redirect` than it gets computed then exits.
+     */
+    const Redirect = routes.find(route => {
+      const Component = this._getComponentFromRoute(route)
+
+      /**
+       * Ideally here I would like to test against the type of the return value of a component,
+       * similar to shallow rendering.
+       *
+       * Since `Redirect` returns null it would just work but on top of that it would allow users
+       * to wrap and compose them which would be nicer and more flexible.
+       *
+       * However I haven't found a reliable way to perform such test so for now we require that
+       * a component named `Redirect` is used, otherwise it won't work.
+       *
+       * Another known issue about relying only on the component type name exposed by React's data
+       * structure is that it will most definitely break depending on the compression settings you
+       * have set for your production build. By default most compressors will mangle classes and
+       * function names.
+       *
+       * Babel's default React preset will override `displayName` as well which makes it
+       * not reliable for this use case either.
+       *
+       * These are the reason why not only we check against the `type` property but also for the
+       * presence of a `to` React prop.
+       */
+      const isRedirect =
+        /^redirect$/i.test(Component.type.name) ||
+        Component.props.hasOwnProperty('to')
+
+      return isRedirect
+    })
+
+    if (Redirect) {
+      // Force `RouteTransitions.LEAVE` so it doesn't get stuck waiting for it to be triggered.
+      this._componentDidLeave()
+
+      return Redirect
+    }
+
     routes.forEach(route => {
       const Component = this._getComponentFromRoute(route)
+
       const transitionableComponent = this._createTransitionableComponent(
         Component,
         {
           key: route.key,
           path: route.props.path,
-          props
+          ...props
         }
       )
 
