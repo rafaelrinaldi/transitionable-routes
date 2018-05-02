@@ -132,25 +132,43 @@ Checkout the [examples folder](./examples).
 npm start
 ```
 
+### Conditional rendering
+
+It's very common to want to conditionally render a route. Say you want to redirect logged out users to a sign in page instead of giving guest access to private routes:
+
+```js
+import React from 'react'
+import { Redirect, Route } from 'react-router-dom'
+import SuperSecretRoute from './components/SuperSecretRoute'
+
+const withAuth = (props, Component) => {
+  // If user is logged in, we're good to go, just return the component itself
+  if (isUserLoggedIn) return <Component {...props} />
+
+  // It's very handy to have "referrer" when you're redirecting, so we use local state for that
+  const referrer = props.path || props.location.pathname
+
+  // Return a `Redirect` component pointing to a sign in page
+  return (
+    <Redirect
+      to={{
+        pathname: '/sign-in',
+        state: { referrer },
+      }}
+    />
+  );
+};
+
+const App = () => (
+  <TransitionableSwitch>
+    <Route path="/super-secret-route" render={props => withAuth(props, SuperSecretRoute)} />
+  </TransitionableSwitch>
+);
+```
+
 ## Project Pipeline
 
 ![Help Wanted](http://messages.hellobits.com/warning.svg?message=Help%20Wanted)
-
-### Conditional rendering
-
-As of now `TransitionableSwitch` is not really able to deal with conditional route rendering. Think of routes that required the user logged in to be rendered:
-
-```js
-const App = () => (
-  <Route exect path="/" component={Home} />
-  <Route path="/login" component={Login} />
-  <Route path="/secret" render={() => {
-    isUserLoggedIn ? <SuperSecretComponent /> : <Redirect to="/login" />
-  }}>
-)
-```
-
-`TransitionableSwitch` still doesn't know how to deal with `Redirect` so even though the route will properly change in this example the login component won't be mounted.
 
 ### API
 
