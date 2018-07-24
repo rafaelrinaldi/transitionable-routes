@@ -87,7 +87,6 @@ class TransitionableSwitch extends React.Component {
 
     // Wait for browser's next tick to emit the event so we can animate properly
     return window.requestAnimationFrame(() => {
-      log(`Emitting new event "${event}" to "${path}"`)
       emitter.emit(event, payload)
     })
   }
