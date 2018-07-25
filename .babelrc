@@ -4,10 +4,13 @@
       "modules": false,
       "loose": true,
       "targets": {
-        "browsers": ["last 1 version"]
+        "browsers": [">0.25%", "ie >= 11"]
       }
     }],
     "stage-0",
     "react"
+  ],
+  "plugins": [
+    "external-helpers"
   ]
 }

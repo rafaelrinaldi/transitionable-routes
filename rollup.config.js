@@ -24,10 +24,7 @@ export default {
   ],
   external: [...Object.keys(pkg.dependencies || {})],
   plugins: [
-    babel({
-      exclude: 'node_modules/**'
-      // plugins: ['external-helpers']
-    }),
+    babel(),
     builtins()
   ]
 }
