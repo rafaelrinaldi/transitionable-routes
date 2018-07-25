@@ -1,6 +1,6 @@
 {
   "name": "transitionable-routes",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Perform transitions when changing routes with React Router",
   "license": "MIT",
   "repository": "github:rafaelrinaldi/transitionable-routes",
